@@ -19,6 +19,15 @@ async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": update.message.text}]
     )
+    async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print("MESSAGE:", update.message.text)
+
+    response = openai.ChatCompletion.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": update.message.text}]
+    )
+    await update.message.reply_text(response.choices[0].message.content)
+    
     await update.message.reply_text(response.choices[0].message.content)
 
 app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()
