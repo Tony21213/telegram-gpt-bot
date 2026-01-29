@@ -9,16 +9,26 @@ from telegram.ext import (
     filters
 )
 
+# Telegram ID пользователя (только для тебя)
+ALLOWED_USER_ID = @Sole_Survivor00  # <-- вставь свой ID
+
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привет 👋 Я твой личный бот!")
+    if update.message.from_user.id != ALLOWED_USER_ID:
+        return
+    await update.message.reply_text("Привет 👋 Я твой бот!")
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.from_user.id != ALLOWED_USER_ID:
+        return
     print("MESSAGE:", update.message.text)
     response = openai.ChatCompletion.create(
         model="gpt-4o-mini",
-        messages=[{"role": "user", "content": update.message.text}]
+        messages=[
+            {"role": "system", "content": "Ты эксперт по CAD, exocad, STL и разработке."},
+            {"role": "user", "content": update.message.text}
+        ]
     )
     await update.message.reply_text(response.choices[0].message.content)
 
@@ -28,4 +38,3 @@ app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
 
 print("BOT IS RUNNING")
 app.run_polling()
-    
