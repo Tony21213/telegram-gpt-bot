@@ -12,7 +12,7 @@ from telegram.ext import (
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привет 👋 Я твой бот.")
+    await update.message.reply_text("Привет 👋 Я твой личный бот!")
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("MESSAGE:", update.message.text)
@@ -28,4 +28,4 @@ app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
 
 print("BOT IS RUNNING")
 app.run_polling()
-
+    
