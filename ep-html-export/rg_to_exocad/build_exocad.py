@@ -7,6 +7,7 @@ from rg_load import load_rg_scene, hex_to_rgb, rowmajor4x4_to_colmajor16
 from mesh_record import write_mesh_record
 from ct_panel import extract_vol_b64_from_rg_html, inject_ct_panel
 from implants import inject_implants_panel
+from markers import inject_markers_panel
 from toolbar import inject_toolbar
 from mobile_rotate import inject_mobile_rotate
 
@@ -209,6 +210,8 @@ if __name__ == "__main__":
         vol_b64 = extract_vol_b64_from_rg_html(rg_html_for_ct)
         print("extracted CT volume payload:", len(vol_b64), "base64 chars")
         html = inject_ct_panel(html, vol_b64)
+
+    html = inject_markers_panel(html)
 
     html = inject_mobile_rotate(html)
 

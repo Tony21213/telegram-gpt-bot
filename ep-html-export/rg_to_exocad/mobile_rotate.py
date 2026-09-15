@@ -49,6 +49,14 @@ MOBILE_ROTATE_CSS = """
   #ep-imp-bar {
     bottom: 8px !important; right: 8px !important; top: auto !important; left: auto !important;
   }
+
+  /* Same footprint as the CT panel above - the two are unlikely to be open
+     at once on a screen this small, and if they are, either can just be
+     closed; not worth a bespoke non-overlapping layout for that. */
+  #ep-mark-panel {
+    top: 64px !important; right: 12px !important; left: 12px !important; bottom: auto !important;
+    width: auto !important; height: min(38vw, 340px) !important;
+  }
 }
 """
 

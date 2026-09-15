@@ -37,6 +37,47 @@
     };
   })();
 
+  // Coordinate helper for the mobile 90deg-rotation mode (mobile_rotate.py):
+  // that mode rotates <body> as a whole via CSS transform, so any
+  // document-space read like getBoundingClientRect() or a pointer event's
+  // clientX/clientY comes back in the POST-rotation VISUAL space (e.g. a
+  // portrait 390x844 box), while exocad's own camera/renderer - and any
+  // NDC (project()/raycaster) math done against it - works in the
+  // PRE-rotation LOCAL space (the landscape 844x390 box matching
+  // GUI.getDeviceWidth()/getDeviceHeight()). Elements drawn *inside* the
+  // rotated body (our SVG overlays) don't need this - the browser applies
+  // the same rotation to them automatically, exactly like it does to the
+  // canvas's own rendered pixels - but converting a raw click position, or
+  // the canvas's own visual rect, into LOCAL coordinates for NDC math does.
+  // Reads the live computed transform (matrix(a,b,c,d,e,f)) instead of
+  // assuming a fixed 90deg angle, so it's a no-op (identity) whenever no
+  // rotation is active (desktop, or mobile landscape orientation).
+  window.epScreenToLocal = window.epScreenToLocal || function (sx, sy) {
+    var t = getComputedStyle(document.body).transform;
+    if (!t || t === "none") return { x: sx, y: sy };
+    var m = t.match(/matrix\(([^)]+)\)/);
+    if (!m) return { x: sx, y: sy };
+    var v = m[1].split(",").map(Number);
+    var a = v[0], b = v[1], c = v[2], d = v[3], e = v[4], f = v[5];
+    var det = a * d - b * c;
+    if (!det) return { x: sx, y: sy };
+    var dx = sx - e, dy = sy - f;
+    return { x: (d * dx - c * dy) / det, y: (-b * dx + a * dy) / det };
+  };
+
+  // An element's own bounding rect, expressed in that same LOCAL space
+  // (see epScreenToLocal above) instead of the visual space
+  // getBoundingClientRect() normally returns.
+  window.epGetLocalRect = window.epGetLocalRect || function (el) {
+    var r = el.getBoundingClientRect();
+    var c1 = window.epScreenToLocal(r.left, r.top);
+    var c2 = window.epScreenToLocal(r.right, r.bottom);
+    return {
+      left: Math.min(c1.x, c2.x), top: Math.min(c1.y, c2.y),
+      width: Math.abs(c2.x - c1.x), height: Math.abs(c2.y - c1.y),
+    };
+  };
+
   // Shared right-side vertical icon dock (idempotent lazy singleton), so
   // ct_panel.js/ruler.js/implants.js each contribute their own buttons
   // instead of scattering separate flat buttons around the screen.

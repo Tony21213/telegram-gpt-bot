@@ -329,10 +329,11 @@
     overlay.addEventListener("click", function (ev) {
       if (!picking) return;
       try {
-        var rect = overlay.getBoundingClientRect();
+        var rect = window.epGetLocalRect(overlay);
+        var local = window.epScreenToLocal(ev.clientX, ev.clientY);
         var mouse = new THREE.Vector2(
-          ((ev.clientX - rect.left) / rect.width) * 2 - 1,
-          -((ev.clientY - rect.top) / rect.height) * 2 + 1
+          ((local.x - rect.left) / rect.width) * 2 - 1,
+          -((local.y - rect.top) / rect.height) * 2 + 1
         );
         var cam = d.m_SceneManager.getCamera();
         var scene = d.m_SceneManager.getScene();
