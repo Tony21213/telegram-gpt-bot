@@ -67,6 +67,7 @@
     + '<label id="ep-ct-rot-row">Поворот <input id="ep-ct-rot" type="range" min="0" max="359" value="0"><span class="val" id="ep-ct-rot-val">0°</span></label>'
     + "</div>";
   document.body.appendChild(panel);
+  window.epKeepAlive(panel);
 
   // ---------- vector helpers ----------
   function v(x, y, z) { return { x: x, y: y, z: z }; }

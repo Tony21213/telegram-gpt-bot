@@ -37,6 +37,7 @@
   var bar = document.createElement("div");
   bar.id = "ep-imp-bar";
   document.body.appendChild(bar);
+  window.epKeepAlive(bar);
 
   var infoBtn = window.epAddDockButton({
     id: "ep-imp-info-btn", label: "Инфо", title: "Информация об имплантах",
@@ -58,6 +59,7 @@
     + '<div id="ep-imp-body"></div>'
     + "</div>";
   document.body.appendChild(modal);
+  window.epKeepAlive(modal);
 
   var sites = [];
   var currentSite = null;

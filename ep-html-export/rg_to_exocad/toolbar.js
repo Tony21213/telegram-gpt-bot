@@ -1,4 +1,42 @@
 (function () {
+  // Self-healing DOM watchdog: the dedicated "exocad webview" native app
+  // wraps the same engine in its own mobile/Cordova UI shell, which may
+  // rebuild parts of document.body after our scripts have already run
+  // (e.g. hamburger-menu mode) - silently detaching our panels. Every
+  // module registers its own root element(s) here once, right after first
+  // appending them to <body>; a single shared MutationObserver plus a
+  // low-frequency interval fallback (for the rarer case of document.body
+  // being replaced wholesale, which would leave the old observer watching
+  // a dead node) re-appends anything found missing.
+  window.epKeepAlive = window.epKeepAlive || (function () {
+    var registered = [];
+    var watching = false;
+
+    function reattachAll() {
+      for (var i = 0; i < registered.length; i++) {
+        var el = registered[i];
+        if (el && !document.body.contains(el)) {
+          document.body.appendChild(el);
+        }
+      }
+    }
+
+    function ensureWatching() {
+      if (watching) return;
+      watching = true;
+      try {
+        new MutationObserver(reattachAll).observe(document.body, { childList: true });
+      } catch (e) { /* ignore */ }
+      setInterval(reattachAll, 1000);
+    }
+
+    return function (el) {
+      if (!el || registered.indexOf(el) !== -1) return;
+      registered.push(el);
+      ensureWatching();
+    };
+  })();
+
   // Shared right-side vertical icon dock (idempotent lazy singleton), so
   // ct_panel.js/ruler.js/implants.js each contribute their own buttons
   // instead of scattering separate flat buttons around the screen.
@@ -29,6 +67,7 @@
     dock = document.createElement("div");
     dock.id = "ep-tool-dock";
     document.body.appendChild(dock);
+    window.epKeepAlive(dock);
     return dock;
   };
 
