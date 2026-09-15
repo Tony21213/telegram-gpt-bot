@@ -3,7 +3,7 @@ import re
 import sys
 
 from binfmt import BinaryWriter
-from rg_load import load_rg_scene, hex_to_rgb, compute_smooth_normals, rowmajor4x4_to_colmajor16
+from rg_load import load_rg_scene, hex_to_rgb, rowmajor4x4_to_colmajor16
 from mesh_record import write_mesh_record
 from ct_panel import extract_vol_b64_from_rg_html, inject_ct_panel
 from implants import inject_implants_panel
@@ -103,7 +103,11 @@ def build_m_data(scene, language="russian"):
     meshes = scene["meshes"]
     w.write_int(len(meshes))
     for m in meshes:
-        normals = compute_smooth_normals(m["vertices"], m["indices"])
+        # No normals written: exocad's own CTMLoader.createModel() already
+        # calls geometry.computeVertexNormals() whenever the CTM file has no
+        # "normal" attribute (confirmed by reading their code), so shipping
+        # our own is pure redundancy - it roughly doubles the vertex data
+        # for identical resulting shading. Dropping it cuts file size a lot.
         colmajor = rowmajor4x4_to_colmajor16(m["transform_rowmajor"])
         color_rgb = hex_to_rgb(m["mesh_color"])
         group = KIND_GROUP_RU.get(m["kind"], "Прочее")
@@ -112,7 +116,7 @@ def build_m_data(scene, language="russian"):
             w,
             vertices=m["vertices"],
             indices=m["indices"],
-            normals=normals,
+            normals=None,
             transform_colmajor=colmajor,
             color_rgb=color_rgb,
             opacity=float(m.get("opacity", 1.0)),

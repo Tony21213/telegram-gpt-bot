@@ -51,35 +51,6 @@ def hex_to_rgb(hexstr):
     return tuple(int(hexstr[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def compute_smooth_normals(vertices, indices):
-    n = len(vertices)
-    acc = [[0.0, 0.0, 0.0] for _ in range(n)]
-
-    def sub(a, b):
-        return (a[0] - b[0], a[1] - b[1], a[2] - b[2])
-
-    def cross(a, b):
-        return (a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0])
-
-    for tri in indices:
-        i0, i1, i2 = tri
-        v0, v1, v2 = vertices[i0], vertices[i1], vertices[i2]
-        fn = cross(sub(v1, v0), sub(v2, v0))
-        for idx in (i0, i1, i2):
-            acc[idx][0] += fn[0]
-            acc[idx][1] += fn[1]
-            acc[idx][2] += fn[2]
-
-    out = []
-    for x, y, z in acc:
-        length = (x * x + y * y + z * z) ** 0.5
-        if length < 1e-12:
-            out.append((0.0, 0.0, 1.0))
-        else:
-            out.append((x / length, y / length, z / length))
-    return out
-
-
 def rowmajor4x4_to_colmajor16(rm):
     # rm: 16 floats, row-major [r0c0,r0c1,r0c2,r0c3, r1c0,...]
     # THREE.Matrix4.elements is column-major: elements[0..3]=col0, etc.
