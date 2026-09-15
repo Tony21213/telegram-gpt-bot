@@ -54,6 +54,16 @@ MOBILE_ROTATE_CSS = """
   #ep-imp-bar {
     bottom: 8px !important; right: 8px !important; top: auto !important; left: auto !important;
   }
+
+  /* Centered panel (top/left/translate(-50%,-50%) is symmetric, so that part
+     needs no override) - but vw/vh keep their REAL-viewport meaning even
+     inside the rotated body (a CSS quirk: percentage viewport units never
+     resolve against a transformed ancestor's box), so a size meant as "90%
+     of local width" must use vh here instead of vw, and vice versa for
+     height - swapped from the desktop rule in opg.js. */
+  #ep-opg-panel {
+    width: min(700px, 90vh) !important; height: min(440px, 80vw) !important;
+  }
 }
 """
 

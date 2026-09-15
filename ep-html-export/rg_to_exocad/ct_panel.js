@@ -372,7 +372,11 @@
     panel.classList.add("on");
     setMode("implant");
   }
-  window.__EP_CT__ = { focusSite: focusSite };
+  window.__EP_CT__ = {
+    focusSite: focusSite,
+    getVolume: function () { return state.vol; },
+    sampleHu: sampleHu,
+  };
 
   async function boot() {
     try {
