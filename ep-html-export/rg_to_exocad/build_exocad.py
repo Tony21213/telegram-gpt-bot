@@ -5,6 +5,7 @@ import sys
 from binfmt import BinaryWriter
 from rg_load import load_rg_scene, hex_to_rgb, compute_smooth_normals, rowmajor4x4_to_colmajor16
 from mesh_record import write_mesh_record
+from ct_panel import extract_vol_b64_from_rg_html, inject_ct_panel
 
 KIND_GROUP_RU = {
     "scan": "Сканы челюстей",
@@ -119,7 +120,7 @@ def build_m_data(scene, language="russian"):
     return w.getvalue(), (cx, cy, cz, radius)
 
 
-def inject_into_shell(shell_html_path, m_data_bytes, out_path):
+def inject_into_shell(shell_html_path, m_data_bytes):
     with open(shell_html_path, "r", encoding="utf-8", errors="replace") as f:
         html = f.read()
 
@@ -172,19 +173,31 @@ def inject_into_shell(shell_html_path, m_data_bytes, out_path):
     insert_at = insert_at + close_tag + len("</script>")
     new_html = new_html[:insert_at] + fit_script + new_html[insert_at:]
 
-    with open(out_path, "w", encoding="utf-8") as f:
-        f.write(new_html)
-    return out_path
+    return new_html
 
 
 if __name__ == "__main__":
+    # Usage: build_exocad.py <scene.bin> <exocad_shell.html> <output.html> [<realguide_export.html>]
+    # The optional 4th argument is a RealGUIDE HTML export to pull the real
+    # CT volume (#d3d-vol-payload) from, wiring up a floating CT window in
+    # the output that's linked to the exocad 3D view (click a point on the
+    # model -> axial/coronal/sagittal slices recenter there).
     scene_bin = sys.argv[1]
     shell_html = sys.argv[2]
     out_path = sys.argv[3]
+    rg_html_for_ct = sys.argv[4] if len(sys.argv) > 4 else None
 
     scene = load_rg_scene(scene_bin)
     print("loaded", len(scene["meshes"]), "meshes from RealGUIDE scene:", scene["title"])
     m_data, bounds = build_m_data(scene)
     print("built m_Data blob:", len(m_data), "bytes; bounds:", bounds)
-    inject_into_shell(shell_html, m_data, out_path)
+    html = inject_into_shell(shell_html, m_data)
+
+    if rg_html_for_ct:
+        vol_b64 = extract_vol_b64_from_rg_html(rg_html_for_ct)
+        print("extracted CT volume payload:", len(vol_b64), "base64 chars")
+        html = inject_ct_panel(html, vol_b64)
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(html)
     print("wrote", out_path)
