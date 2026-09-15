@@ -1,34 +1,35 @@
 (function () {
   var css = ""
-    + "#ep-imp-bar{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:20;"
-    + "display:flex;gap:6px;flex-wrap:wrap;max-width:70vw;justify-content:center;}"
-    + "#ep-imp-bar button{min-width:38px;height:38px;padding:0 10px;border-radius:19px;cursor:pointer;"
-    + "background:rgba(71,58,109,.85);color:#fff;border:1px solid rgba(255,255,255,.25);"
-    + "font:650 13px system-ui,sans-serif;}"
-    + "#ep-imp-bar button:hover{background:#584e7b;}"
-    + "#ep-imp-bar button.on{background:#ef895f;border-color:#ffcbb0;}"
-    + "#ep-imp-info-btn{position:absolute;right:8px;bottom:8px;z-index:20;width:38px;height:38px;border-radius:50%;"
-    + "background:#473a6d;color:#fff;border:1px solid #362b56;cursor:pointer;font:700 15px Georgia,serif;}"
-    + "#ep-imp-modal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:18px;}"
+    + "#ep-imp-bar{position:absolute;left:8px;right:66px;bottom:8px;z-index:20;"
+    + "display:flex;gap:1px;flex-wrap:wrap;justify-content:flex-start;"
+    + "background:var(--p7,#17151e);border:1px solid rgba(255,255,255,.08);border-radius:4px;overflow:hidden;width:max-content;}"
+    + "#ep-imp-bar button{min-width:34px;height:34px;padding:0 8px;border-radius:0;cursor:pointer;"
+    + "background:transparent;color:var(--exo-purple-light2,#c4c7d6);border:0;"
+    + "font:700 12px var(--exo-font-family,Verdana,Arial,sans-serif);}"
+    + "#ep-imp-bar button:hover{background:var(--exo-purple,#473a6d);color:#fff;}"
+    + "#ep-imp-bar button.on{background:var(--exo-orange,#ef895f);color:#2b2341;}"
+    + "#ep-imp-modal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:18px;"
+    + "font-family:var(--exo-font-family,Verdana,Arial,sans-serif);}"
     + "#ep-imp-modal.on{display:flex;}"
     + "#ep-imp-dim{position:absolute;inset:0;background:rgba(10,8,16,.6);backdrop-filter:blur(4px);}"
-    + "#ep-imp-card{position:relative;z-index:1;width:min(480px,100%);max-height:88vh;overflow:auto;"
-    + "background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5);}"
-    + "#ep-imp-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#473a6d;color:#fff;"
-    + "border-radius:14px 14px 0 0;}"
-    + "#ep-imp-head b{flex:1;font-size:15px;letter-spacing:.02em;}"
-    + "#ep-imp-head button{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.18);"
-    + "color:#fff;border:1px solid rgba(255,255,255,.35);cursor:pointer;}"
-    + "#ep-imp-tabs{display:flex;gap:6px;padding:10px 16px 0;}"
-    + "#ep-imp-tabs button{height:26px;padding:0 12px;border-radius:13px;cursor:pointer;font-size:12px;font-weight:600;"
-    + "background:#f4f2f8;color:#473a6d;border:1px solid #e5e3e9;}"
-    + "#ep-imp-tabs button.on{background:#473a6d;color:#fff;border-color:#473a6d;}"
-    + "#ep-imp-body{padding:12px 16px 18px;}"
-    + "#ep-imp-body .row{display:flex;gap:10px;padding:6px 0;font-size:13px;border-top:1px solid #eee;}"
+    + "#ep-imp-card{position:relative;z-index:1;width:min(420px,100%);max-height:88vh;overflow:auto;"
+    + "background:var(--p6,#2b2341);border:1px solid rgba(255,255,255,.1);border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.5);}"
+    + "#ep-imp-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--exo-purple-dark,#362b56);color:#fff;"
+    + "border-bottom:1px solid rgba(255,255,255,.1);}"
+    + "#ep-imp-head b{flex:1;font-size:14px;letter-spacing:.02em;}"
+    + "#ep-imp-head button{width:24px;height:24px;border-radius:4px;background:var(--exo-purple,#473a6d);"
+    + "color:#fff;border:1px solid rgba(255,255,255,.15);cursor:pointer;}"
+    + "#ep-imp-tabs{display:flex;gap:1px;padding:0;background:rgba(255,255,255,.08);}"
+    + "#ep-imp-tabs button{flex:1;height:30px;padding:0 10px;border-radius:0;cursor:pointer;font-size:11px;font-weight:700;"
+    + "background:var(--p6,#2b2341);color:var(--exo-purple-light2,#c4c7d6);border:0;"
+    + "font-family:var(--exo-font-family,Verdana,Arial,sans-serif);}"
+    + "#ep-imp-tabs button.on{background:var(--exo-orange,#ef895f);color:#2b2341;}"
+    + "#ep-imp-body{padding:10px 14px 16px;}"
+    + "#ep-imp-body .row{display:flex;gap:10px;padding:6px 0;font-size:13px;border-top:1px solid rgba(255,255,255,.08);}"
     + "#ep-imp-body .row:first-child{border-top:0;}"
-    + "#ep-imp-body .lab{flex:0 0 100px;color:#584e7b;font-weight:600;}"
-    + "#ep-imp-body .val{flex:1;color:#222;}"
-    + "#ep-imp-body .empty{color:#888;font-size:13px;padding:12px 0;}";
+    + "#ep-imp-body .lab{flex:0 0 110px;color:var(--exo-purple-light2,#c4c7d6);font-weight:700;}"
+    + "#ep-imp-body .val{flex:1;color:#fff;}"
+    + "#ep-imp-body .empty{color:var(--exo-purple-light,#9da1ba);font-size:13px;padding:12px 0;}";
   var styleEl = document.createElement("style");
   styleEl.textContent = css;
   document.head.appendChild(styleEl);
@@ -37,12 +38,11 @@
   bar.id = "ep-imp-bar";
   document.body.appendChild(bar);
 
-  var infoBtn = document.createElement("button");
-  infoBtn.id = "ep-imp-info-btn";
-  infoBtn.type = "button";
-  infoBtn.textContent = "i";
-  infoBtn.title = "Информация об имплантах";
-  document.body.appendChild(infoBtn);
+  var infoBtn = window.epAddDockButton({
+    id: "ep-imp-info-btn", label: "Инфо", title: "Информация об имплантах",
+    svg: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8v.01"></path></svg>',
+    afterSeparator: true,
+  });
 
   var modal = document.createElement("div");
   modal.id = "ep-imp-modal";

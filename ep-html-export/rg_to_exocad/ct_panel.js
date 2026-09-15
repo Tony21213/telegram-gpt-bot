@@ -5,52 +5,48 @@
   };
 
   var css = ""
-    + "#ep-ct-toggle{position:absolute;left:8px;bottom:8px;z-index:20;width:40px;height:40px;border-radius:50%;"
-    + "background:#296eb3;color:#fff;border:1px solid #1e3044;cursor:pointer;font:600 11px system-ui,sans-serif;}"
-    + "#ep-ct-toggle:hover{background:#3a82c9;}"
-    + "#ep-ct-pick{position:absolute;left:56px;bottom:8px;z-index:20;height:40px;padding:0 12px;border-radius:20px;"
-    + "background:#1e3044;color:#fff;border:1px solid #2a3f55;cursor:pointer;font:600 11px system-ui,sans-serif;}"
-    + "#ep-ct-pick.on{background:#d9822b;border-color:#ffb86a;}"
-    + "#ep-ct-panel{position:fixed;right:12px;top:12px;bottom:12px;width:min(46vw,720px);z-index:30;display:none;"
-    + "background:#0b1622;border:1px solid #2a3f55;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.5);"
-    + "color:#fff;font:12px/1.4 system-ui,sans-serif;flex-direction:column;overflow:hidden;}"
+    + "#ep-ct-panel{position:fixed;right:58px;top:12px;bottom:12px;width:min(30vw,440px);z-index:30;display:none;"
+    + "background:var(--p6,#2b2341);border:1px solid rgba(255,255,255,.1);border-radius:4px;box-shadow:0 12px 40px rgba(0,0,0,.5);"
+    + "color:#fff;font:12px/1.4 var(--exo-font-family,Verdana,Arial,sans-serif);flex-direction:column;overflow:hidden;}"
     + "#ep-ct-panel.on{display:flex;}"
-    + "#ep-ct-head{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#122134;border-bottom:1px solid #2a3f55;}"
-    + "#ep-ct-head b{flex:1;font-weight:650;letter-spacing:.02em;}"
-    + "#ep-ct-free{height:24px;padding:0 10px;border-radius:12px;background:#1e3044;color:#9ab0c7;border:1px solid #2a3f55;cursor:pointer;font-size:11px;}"
+    + "#ep-ct-head{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--exo-purple-dark,#362b56);"
+    + "border-bottom:1px solid rgba(255,255,255,.1);}"
+    + "#ep-ct-head b{flex:1;font-weight:700;letter-spacing:.02em;font-size:12px;}"
+    + "#ep-ct-free{height:24px;padding:0 10px;border-radius:4px;background:var(--exo-purple,#473a6d);color:#fff;"
+    + "border:1px solid rgba(255,255,255,.15);cursor:pointer;font-size:11px;font-family:inherit;}"
     + "#ep-ct-panel:not(.implant-mode) #ep-ct-free{display:none;}"
-    + "#ep-ct-close{width:26px;height:26px;border-radius:6px;background:#1e3044;color:#fff;border:1px solid #2a3f55;cursor:pointer;}"
-    + "#ep-ct-views{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:#2a3f55;}"
-    + "#ep-ct-panel.implant-mode #ep-ct-views{grid-template-columns:1fr 1fr;grid-template-rows:1fr;}"
+    + "#ep-ct-close{width:24px;height:24px;border-radius:4px;background:var(--exo-purple,#473a6d);color:#fff;"
+    + "border:1px solid rgba(255,255,255,.15);cursor:pointer;}"
+    // Vertical stack of views (like the real ExoPlan desktop app's right-hand
+    // DICOM column), not a 2x2 grid.
+    + "#ep-ct-views{flex:1;min-height:0;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(3,1fr);gap:1px;"
+    + "background:rgba(255,255,255,.1);}"
+    + "#ep-ct-panel.implant-mode #ep-ct-views{grid-template-rows:repeat(2,1fr);}"
     + "#ep-ct-panel.implant-mode .ep-ct-view.only-free{display:none;}"
     + ".ep-ct-view{position:relative;background:#000;overflow:hidden;min-height:0;min-width:0;}"
     + ".ep-ct-view canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;cursor:ns-resize;}"
-    + ".ep-ct-lab{position:absolute;left:4px;top:3px;font-size:10px;font-weight:700;color:#9ab0c7;background:rgba(0,0,0,.5);"
-    + "padding:1px 5px;border-radius:3px;pointer-events:none;z-index:2;}"
-    + "#ep-ct-info{position:relative;padding:8px;font-size:11px;color:#9ab0c7;white-space:pre-line;overflow:auto;}"
-    + "#ep-ct-panel.implant-mode #ep-ct-info{display:none;}"
-    + "#ep-ct-controls{display:flex;flex-wrap:wrap;gap:10px;padding:8px 10px;background:#122134;border-top:1px solid #2a3f55;}"
-    + "#ep-ct-controls label{display:flex;align-items:center;gap:6px;font-size:10px;color:#9ab0c7;}"
-    + "#ep-ct-controls input[type=range]{width:90px;accent-color:#3a82c9;}"
-    + "#ep-ct-controls .val{min-width:36px;color:#fff;font-weight:600;}"
+    + ".ep-ct-lab{position:absolute;left:4px;top:3px;font-size:10px;font-weight:700;color:var(--exo-purple-light2,#c4c7d6);"
+    + "background:rgba(0,0,0,.55);padding:1px 5px;border-radius:3px;pointer-events:none;z-index:2;}"
+    + "#ep-ct-info{display:none;}"
+    + "#ep-ct-controls{display:flex;flex-wrap:wrap;gap:10px;padding:8px 10px;background:var(--exo-purple-dark,#362b56);"
+    + "border-top:1px solid rgba(255,255,255,.1);}"
+    + "#ep-ct-controls label{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--exo-purple-light2,#c4c7d6);}"
+    + "#ep-ct-controls input[type=range]{width:90px;accent-color:var(--exo-orange,#ef895f);}"
+    + "#ep-ct-controls .val{min-width:36px;color:#fff;font-weight:700;}"
     + "#ep-ct-rot-row{display:none;}"
     + "#ep-ct-panel.implant-mode #ep-ct-rot-row{display:flex;}";
   var styleEl = document.createElement("style");
   styleEl.textContent = css;
   document.head.appendChild(styleEl);
 
-  var toggleBtn = document.createElement("button");
-  toggleBtn.id = "ep-ct-toggle";
-  toggleBtn.type = "button";
-  toggleBtn.textContent = "KT";
-  toggleBtn.title = "Показать/скрыть окно КТ (данные из RealGUIDE)";
-  document.body.appendChild(toggleBtn);
-
-  var pickBtn = document.createElement("button");
-  pickBtn.id = "ep-ct-pick";
-  pickBtn.type = "button";
-  pickBtn.textContent = "Указать точку в 3D";
-  document.body.appendChild(pickBtn);
+  var toggleBtn = window.epAddDockButton({
+    id: "ep-ct-toggle", label: "КТ", title: "Показать/скрыть окно КТ (данные из RealGUIDE)",
+    svg: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 10h18M9 4v16"></path></svg>',
+  });
+  var pickBtn = window.epAddDockButton({
+    id: "ep-ct-pick", label: "Точка", title: "Указать точку среза КТ: клик по модели",
+    svg: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg>',
+  });
 
   var panel = document.createElement("div");
   panel.id = "ep-ct-panel";

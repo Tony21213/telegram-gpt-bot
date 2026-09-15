@@ -7,7 +7,8 @@ from rg_load import load_rg_scene, hex_to_rgb, compute_smooth_normals, rowmajor4
 from mesh_record import write_mesh_record
 from ct_panel import extract_vol_b64_from_rg_html, inject_ct_panel
 from implants import inject_implants_panel
-from ruler import inject_ruler
+from toolbar import inject_toolbar
+from mobile_rotate import inject_mobile_rotate
 
 KIND_GROUP_RU = {
     "scan": "Сканы челюстей",
@@ -194,6 +195,7 @@ if __name__ == "__main__":
     m_data, bounds = build_m_data(scene)
     print("built m_Data blob:", len(m_data), "bytes; bounds:", bounds)
     html = inject_into_shell(shell_html, m_data)
+    html = inject_toolbar(html)
 
     if scene["sites"]:
         html = inject_implants_panel(html, scene["sites"])
@@ -204,7 +206,7 @@ if __name__ == "__main__":
         print("extracted CT volume payload:", len(vol_b64), "base64 chars")
         html = inject_ct_panel(html, vol_b64)
 
-    html = inject_ruler(html)
+    html = inject_mobile_rotate(html)
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
