@@ -15,6 +15,40 @@ MOBILE_ROTATE_CSS = """
     transform-origin: top left !important;
     transform: rotate(90deg) translateY(-100%) !important;
   }
+
+  /* Our floating panels (ct_panel.js/toolbar.js/implants.js) are inside
+     the rotated <body>, so their own left/right/top/bottom are resolved
+     in that LOCAL (pre-rotation) box before the whole thing gets rotated
+     for painting. For a 90deg clockwise rotation: local-top ends up on
+     screen at the RIGHT, local-right ends up at the BOTTOM, local-bottom
+     ends up at the LEFT, local-left ends up at the TOP. A panel pinned to
+     local "right" (as written for a normal, unrotated desktop page) was
+     therefore landing on the screen's bottom edge instead of its right
+     edge. These rules re-derive each panel's LOCAL position from where it
+     should actually end up on screen.
+
+     right (dock): local-top -> visual-right, centered along that edge.
+     right (ct panel): local-top -> visual-right, spanning local-left..right
+     (-> spans the full visual height once rotated).
+     bottom-left (implant bar): local-right -> visual-bottom,
+     local-bottom -> visual-left. */
+  #ep-tool-dock {
+    top: 8px !important; right: auto !important; bottom: auto !important;
+    left: 50% !important; transform: translateX(-50%) !important;
+    flex-direction: row !important;
+  }
+  #ep-tool-dock button { border-bottom: 0 !important; border-right: 1px solid rgba(255,255,255,.06) !important; }
+  #ep-tool-dock button:last-of-type { border-right: 0 !important; }
+  #ep-tool-dock .ep-dock-sep { height: auto !important; width: 8px !important; }
+
+  #ep-ct-panel {
+    top: 64px !important; right: 12px !important; left: 12px !important; bottom: auto !important;
+    width: auto !important; height: min(38vw, 340px) !important;
+  }
+
+  #ep-imp-bar {
+    bottom: 8px !important; right: 8px !important; top: auto !important; left: auto !important;
+  }
 }
 """
 
