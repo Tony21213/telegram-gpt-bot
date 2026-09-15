@@ -6,6 +6,7 @@ from binfmt import BinaryWriter
 from rg_load import load_rg_scene, hex_to_rgb, compute_smooth_normals, rowmajor4x4_to_colmajor16
 from mesh_record import write_mesh_record
 from ct_panel import extract_vol_b64_from_rg_html, inject_ct_panel
+from implants import inject_implants_panel
 
 KIND_GROUP_RU = {
     "scan": "Сканы челюстей",
@@ -192,6 +193,10 @@ if __name__ == "__main__":
     m_data, bounds = build_m_data(scene)
     print("built m_Data blob:", len(m_data), "bytes; bounds:", bounds)
     html = inject_into_shell(shell_html, m_data)
+
+    if scene["sites"]:
+        html = inject_implants_panel(html, scene["sites"])
+        print("added implant info panel for", len(scene["sites"]), "sites")
 
     if rg_html_for_ct:
         vol_b64 = extract_vol_b64_from_rg_html(rg_html_for_ct)
