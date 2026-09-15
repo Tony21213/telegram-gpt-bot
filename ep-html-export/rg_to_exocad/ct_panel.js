@@ -1,4 +1,9 @@
 (function () {
+  window.epSetActiveTool = window.epSetActiveTool || function (name) {
+    window.__EP_ACTIVE_TOOL__ = name;
+    document.dispatchEvent(new CustomEvent("ep-tool-changed", { detail: name }));
+  };
+
   var css = ""
     + "#ep-ct-toggle{position:absolute;left:8px;bottom:8px;z-index:20;width:40px;height:40px;border-radius:50%;"
     + "background:#296eb3;color:#fff;border:1px solid #1e3044;cursor:pointer;font:600 11px system-ui,sans-serif;}"
@@ -309,6 +314,13 @@
   pickBtn.addEventListener("click", function () {
     picking = !picking;
     pickBtn.classList.toggle("on", picking);
+    epSetActiveTool(picking ? "ct-pick" : null);
+  });
+  document.addEventListener("ep-tool-changed", function (ev) {
+    if (ev.detail !== "ct-pick" && picking) {
+      picking = false;
+      pickBtn.classList.remove("on");
+    }
   });
 
   function trySetupPicking() {
