@@ -16,22 +16,27 @@ MOBILE_ROTATE_CSS = """
     transform: rotate(90deg) translateY(-100%) !important;
   }
 
-  /* Our floating panels (ct_panel.js/toolbar.js/implants.js) are inside
-     the rotated <body>, so their own left/right/top/bottom are resolved
-     in that LOCAL (pre-rotation) box before the whole thing gets rotated
-     for painting. For a 90deg clockwise rotation: local-top ends up on
-     screen at the RIGHT, local-right ends up at the BOTTOM, local-bottom
-     ends up at the LEFT, local-left ends up at the TOP. A panel pinned to
-     local "right" (as written for a normal, unrotated desktop page) was
-     therefore landing on the screen's bottom edge instead of its right
-     edge. These rules re-derive each panel's LOCAL position from where it
-     should actually end up on screen.
+  /* Our floating panels (ct_panel.js/toolbar.js/implants.js/markers.js) are
+     inside the rotated <body>, so their own left/right/top/bottom are
+     resolved in that LOCAL (pre-rotation) box before the whole thing gets
+     rotated for painting - and that LOCAL box is exactly the landscape
+     frame the user ends up perceiving once they physically tilt the phone
+     90deg to match the rotation, so position/size intent ("spans most of
+     the width", "sits just under the dock") should be authored directly in
+     LOCAL terms, same as on an ordinary unrotated landscape page. Only
+     RAYCASTING and on-screen pixel math (ct_panel.js/markers.js picking +
+     pin projection) need the LOCAL<->real-screen conversion
+     (epScreenToLocal/epGetLocalRect in toolbar.js), because those compare
+     against actual click coordinates and getBoundingClientRect(), which
+     the browser reports in the real (post-rotation) screen frame
+     regardless of how anyone is holding the phone.
 
-     right (dock): local-top -> visual-right, centered along that edge.
-     right (ct panel): local-top -> visual-right, spanning local-left..right
-     (-> spans the full visual height once rotated).
-     bottom-left (implant bar): local-right -> visual-bottom,
-     local-bottom -> visual-left. */
+     The one thing that DOES need re-deriving here is which local EDGE a
+     panel should pin to: for this 90deg clockwise rotation, local-top ends
+     up on screen at the RIGHT, local-right at the BOTTOM, local-bottom at
+     the LEFT, local-left at the TOP - so e.g. the dock (pinned to local
+     "right" for a normal desktop layout) was landing on the screen's
+     bottom edge instead of its right edge without this override. */
   #ep-tool-dock {
     top: 8px !important; right: auto !important; bottom: auto !important;
     left: 50% !important; transform: translateX(-50%) !important;
@@ -41,21 +46,13 @@ MOBILE_ROTATE_CSS = """
   #ep-tool-dock button:last-of-type { border-right: 0 !important; }
   #ep-tool-dock .ep-dock-sep { height: auto !important; width: 8px !important; }
 
-  #ep-ct-panel {
+  #ep-ct-panel, #ep-mark-panel {
     top: 64px !important; right: 12px !important; left: 12px !important; bottom: auto !important;
     width: auto !important; height: min(38vw, 340px) !important;
   }
 
   #ep-imp-bar {
     bottom: 8px !important; right: 8px !important; top: auto !important; left: auto !important;
-  }
-
-  /* Same footprint as the CT panel above - the two are unlikely to be open
-     at once on a screen this small, and if they are, either can just be
-     closed; not worth a bespoke non-overlapping layout for that. */
-  #ep-mark-panel {
-    top: 64px !important; right: 12px !important; left: 12px !important; bottom: auto !important;
-    width: auto !important; height: min(38vw, 340px) !important;
   }
 }
 """
